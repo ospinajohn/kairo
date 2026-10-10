@@ -3,6 +3,44 @@
    Fuente: docs/design.md §9
    ============================================================ */
 
+/* ── Controles de ventana: zona de activación y mini-pill flotante con margen seguro ── */
+.window-controls-zone {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 96px;
+  height: 56px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-top: 14px;
+  padding-right: 18px;
+  z-index: 100;
+  pointer-events: auto;
+}
+
+.window-controls-pill {
+  opacity: 0;
+  transform: translateY(-2px) scale(0.95);
+  transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1), transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(28, 28, 30, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+.window-controls-zone:hover .window-controls-pill {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+
 /* Respiración del brillo del arco (corriendo) */
 @keyframes breathe {
   0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 75, 43, 0.35)); }

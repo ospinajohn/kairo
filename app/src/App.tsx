@@ -16,6 +16,7 @@ import { TimerRing }             from "./components/TimerRing";
 import { PhaseIcon, PhaseLabel } from "./components/PhaseLabel";
 import { SessionDots }           from "./components/SessionDots";
 import { MainControls }          from "./components/MainControls";
+import { WindowControls }        from "./components/WindowControls";
 import { SettingsScreen }        from "./components/Settings/SettingsScreen";
 import type { SettingsKey }      from "./components/Settings/SettingsScreen";
 import { ValueEditor }           from "./components/Settings/ValueEditor";
@@ -64,26 +65,27 @@ export default function App() {
   };
 
   return (
-    // Padding transparente para dar espacio a la sombra (design.md §3.1)
-    <div style={{ padding: 16, background: "transparent" }}>
-      <div
-        data-tauri-drag-region
-        style={{
-          position:        "relative",
-          width:           320,
-          height:          320,
-          borderRadius:    54,
-          backgroundColor: "var(--bg)",
-          backgroundImage: "radial-gradient(90% 90% at 50% 100%, rgba(120,25,10,0.18) 0%, rgba(0,0,0,0) 70%)",
-          border:          "1px solid var(--border-subtle)",
-          boxShadow:       "0 12px 32px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.40)",
-          overflow:        "hidden",
-          userSelect:      "none",
-          cursor:          "default",
-        }}
-      >
-        {/* ═══════════════ PANTALLA 1: TEMPORIZADOR ═══════════════ */}
-        {currentScreen === "timer" && (
+    <div
+      className="kairo-widget"
+      data-tauri-drag-region
+      style={{
+        position:        "relative",
+        width:           320,
+        height:          320,
+        borderRadius:    54,
+        backgroundColor: "var(--bg)",
+        backgroundImage: "radial-gradient(90% 90% at 50% 100%, rgba(120,25,10,0.18) 0%, rgba(0,0,0,0) 70%)",
+        border:          "1px solid var(--border-subtle)",
+        overflow:        "hidden",
+        userSelect:      "none",
+        cursor:          "default",
+      }}
+    >
+      {/* Controles de ventana: tenues en reposo, visibles al hover */}
+      <WindowControls />
+
+      {/* ═══════════════ PANTALLA 1: TEMPORIZADOR ═══════════════ */}
+      {currentScreen === "timer" && (
           <div className="screen-enter" style={{ position: "relative", width: "100%", height: "100%" }}>
             {/* Anillo — centro en top:134px, diámetro 214px */}
             <div style={{
@@ -221,6 +223,5 @@ export default function App() {
           />
         )}
       </div>
-    </div>
   );
 }

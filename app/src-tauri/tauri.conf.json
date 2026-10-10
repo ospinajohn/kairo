@@ -12,15 +12,16 @@
   "app": {
     "windows": [
       {
-        "title": "Kairo POC",
-        "width": 352,
-        "height": 352,
-        "minWidth": 352,
-        "minHeight": 352,
-        "maxWidth": 352,
-        "maxHeight": 352,
+        "title": "Kairo",
+        "width": 320,
+        "height": 320,
+        "minWidth": 320,
+        "minHeight": 320,
+        "maxWidth": 320,
+        "maxHeight": 320,
         "decorations": false,
         "transparent": true,
+        "shadow": false,
         "resizable": false,
         "center": true
       }

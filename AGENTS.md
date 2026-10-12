@@ -53,7 +53,8 @@ Interfaz visual oscura, funcionamiento local, sin cuentas ni conexión a interne
 
 ## Etapa actual
 
-**Etapa 3 — Implementación MVP** (en curso)
+**Proyecto completo** — todas las tareas del MVP y Pro/escritorio implementadas y verificadas.
 
 Ver `docs/handoff.md` para el estado exacto y los próximos pasos.
+
 

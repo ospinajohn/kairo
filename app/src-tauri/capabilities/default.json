@@ -16,6 +16,7 @@
     "opener:default",
     "notification:default",
     "autostart:default",
-    "window-state:default"
+    "window-state:default",
+    "sql:default"
   ]
 }

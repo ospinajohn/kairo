@@ -40,6 +40,8 @@ pub fn run() {
         .plugin(tauri_plugin_autostart::Builder::new().build())
         // Abrir URLs externas
         .plugin(tauri_plugin_opener::init())
+        // Estadísticas SQLite
+        .plugin(tauri_plugin_sql::Builder::default().build())
         .setup(|app| {
             // ── Estado compartido: ¿minimizar a bandeja al cerrar? ──
             // Default true — se actualiza desde el frontend vía evento
@@ -119,3 +121,4 @@ pub fn run() {
         .run(tauri::generate_context!())
         .expect("error al iniciar Kairo");
 }
+

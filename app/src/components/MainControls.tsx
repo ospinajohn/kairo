@@ -15,6 +15,7 @@ interface MainControlsProps {
   onResume:   () => void;
   onReset:    () => void;
   onSettings: () => void;
+  onStats?:   () => void;
 }
 
 function ResetIcon() {
@@ -43,7 +44,7 @@ function primaryLabel(status: TimerStatus): string {
   return "INICIAR";
 }
 
-export function MainControls({ status, onStart, onPause, onResume, onReset, onSettings }: MainControlsProps) {
+export function MainControls({ status, onStart, onPause, onResume, onReset, onSettings, onStats }: MainControlsProps) {
   const handlePrimary = status === "running" ? onPause
                       : status === "paused"  ? onResume
                       : onStart;
@@ -111,6 +112,24 @@ export function MainControls({ status, onStart, onPause, onResume, onReset, onSe
         {primaryLabel(status)}
       </button>
 
+      {/* Botón ajustes + stats: click abre ajustes, doble click (o long press no disponible) abre stats */}
+      {onStats && (
+        <button
+          style={{ ...circleBtn, position: "relative" }}
+          onClick={onStats}
+          aria-label="Ver estadísticas"
+          onMouseEnter={e => { e.currentTarget.style.color = "var(--text)"; }}
+          onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
+          onMouseDown={e  => { e.currentTarget.style.transform = "scale(0.96)"; }}
+          onMouseUp={e    => { e.currentTarget.style.transform = "scale(1)"; }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6"  y1="20" x2="6"  y2="14"/>
+          </svg>
+        </button>
+      )}
       {/* Botón ajustes */}
       <button
         style={circleBtn}
@@ -126,3 +145,4 @@ export function MainControls({ status, onStart, onPause, onResume, onReset, onSe
     </div>
   );
 }
+

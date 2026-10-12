@@ -19,8 +19,11 @@ import { SettingsScreen }        from "./components/Settings/SettingsScreen";
 import type { SettingsKey }      from "./components/Settings/SettingsScreen";
 import { ValueEditor }           from "./components/Settings/ValueEditor";
 import { CONFIG_RANGES }         from "./logic/config";
+import { useStats }             from "./hooks/useStats";
+import { StatsScreen }          from "./components/Stats/StatsScreen";
+import type { TimerState }         from "./logic/timer";
 
-type Screen = "timer" | "settings" | "editor";
+type Screen = "timer" | "settings" | "editor" | "stats";
 
 export default function App() {
   const { config, setField } = useConfig();
@@ -38,11 +41,13 @@ export default function App() {
   const { play: playSound }                                     = useSound(soundEnabled);
   const { alwaysOnTop, autostart, minimizeToTray, toggleAlwaysOnTop, toggleAutostart, toggleMinimizeToTray } = useWindowControls();
   const { compact, toggleCompact }                              = useCompactMode();
+  const { weekStats, recordSession, exportJSON, exportCSV, importJSON } = useStats();
 
-  // Callback al completar una fase: notificación + sonido
-  const onPhaseComplete = (s: Parameters<typeof notify>[0]) => {
+  // Callback al completar una fase: notificación + sonido + estadísticas
+  const onPhaseComplete = (s: TimerState) => {
     notify(s);
     playSound();
+    recordSession(s.cycle.currentPhase, s.totalMs - s.remainingMs);
   };
 
   const { state, progress, minutes, seconds, startedAt,
@@ -210,6 +215,7 @@ export default function App() {
                   onResume={onResume}
                   onReset={onReset}
                   onSettings={() => setCurrentScreen("settings")}
+                  onStats={() => setCurrentScreen("stats")}
                 />
               </div>
             </div>
@@ -238,7 +244,33 @@ export default function App() {
             />
           )}
 
-          {/* PANTALLA 3: EDITOR NUMÉRICO */}
+          {/* PANTALLA 4: ESTADÍSTICAS */}
+          {currentScreen === "stats" && (
+            <StatsScreen
+              stats={weekStats}
+              onClose={() => setCurrentScreen("timer")}
+              onExport={async (fmt) => {
+                const data = fmt === "json" ? await exportJSON() : await exportCSV();
+                const blob = new Blob([data], { type: "text/plain" });
+                const url  = URL.createObjectURL(blob);
+                const a    = document.createElement("a");
+                a.href = url; a.download = "kairo-stats." + fmt;
+                a.click(); URL.revokeObjectURL(url);
+              }}
+              onImport={async () => {
+                const input = document.createElement("input");
+                input.type = "file"; input.accept = ".json";
+                input.onchange = async () => {
+                  const file = input.files?.[0]; if (!file) return;
+                  const text = await file.text();
+                  await importJSON(text);
+                };
+                input.click();
+              }}
+            />
+          )}
+
+                    {/* PANTALLA 3: EDITOR NUMÉRICO */}
           {currentScreen === "editor" && (
             <ValueEditor
               title={editorMeta[editingKey].title}
@@ -256,5 +288,7 @@ export default function App() {
     </div>
   );
 }
+
+
 
 

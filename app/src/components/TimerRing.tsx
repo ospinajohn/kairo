@@ -20,6 +20,7 @@ interface TimerRingProps {
   startedAt:   number | null; // Date.now() del último tick React
   totalMs:     number;        // duración total de la fase
   remainingMs: number;        // tiempo restante en el snapshot
+  size?:       number;          // tamaño del SVG (default 214)
 }
 
 const SIZE   = 214;
@@ -337,3 +338,5 @@ export function TimerRing({
     </div>
   );
 }
+
+

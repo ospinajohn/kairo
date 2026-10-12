@@ -1,11 +1,21 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Capability para la ventana principal — incluye notificaciones nativas",
+  "description": "Capability para la ventana principal — MVP + Pro",
   "windows": ["main"],
   "permissions": [
     "core:default",
+    "core:window:allow-close",
+    "core:window:allow-minimize",
+    "core:window:allow-start-dragging",
+    "core:window:allow-set-always-on-top",
+    "core:window:allow-set-size",
+    "core:window:allow-set-position",
+    "core:window:allow-unminimize",
+    "core:window:allow-show",
     "opener:default",
-    "notification:default"
+    "notification:default",
+    "autostart:default",
+    "window-state:default"
   ]
 }

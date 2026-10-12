@@ -1,22 +1,25 @@
 [package]
-name = "kairo-poc"
+name = "kairo"
 version = "0.1.0"
-description = "Prueba de viabilidad Kairo — PV-001, PV-002, PV-006"
-authors = ["you"]
+description = "Temporizador Pomodoro para Windows"
+authors = ["Kairo"]
 edition = "2021"
 
 [lib]
-name = "kairo_poc_lib"
+name = "kairo_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = [] }
-tauri-plugin-opener = "2"
-tauri-plugin-notification = "2"
-serde = { version = "1", features = ["derive"] }
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-opener          = "2"
+tauri-plugin-notification    = "2"
+tauri-plugin-single-instance = "2"
+tauri-plugin-window-state    = "2"
+tauri-plugin-autostart       = "2"
+serde      = { version = "1", features = ["derive"] }
 serde_json = "1"
 
 [profile.release]
@@ -25,3 +28,4 @@ lto = true
 opt-level = 3
 panic = "abort"
 strip = true
+

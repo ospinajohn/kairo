@@ -6,29 +6,30 @@
 /* ── Controles de ventana: zona de activación y mini-pill flotante con margen seguro ── */
 .window-controls-zone {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 96px;
-  height: 56px;
+  top: 24px;
+  right: 20px;
+  width: 56px;
+  height: 40px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-end;
-  padding-top: 14px;
-  padding-right: 18px;
+  padding: 0;
   z-index: 100;
   pointer-events: auto;
 }
 
 .window-controls-pill {
   opacity: 0;
-  transform: translateY(-2px) scale(0.95);
-  transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1), transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(-1px) scale(0.98);
+  transition:
+    opacity 280ms ease-out,
+    transform 320ms var(--ease-out);
   background: rgba(28, 28, 30, 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 12px;
-  padding: 3px 6px;
+  padding: 3px 5px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -37,7 +38,33 @@
 
 .window-controls-zone:hover .window-controls-pill {
   opacity: 1;
+  transform: translateY(0) scale(1.01);
+}
+
+.window-controls-zone:focus-within .window-controls-pill {
+  opacity: 1;
   transform: translateY(0) scale(1);
+}
+
+.screen-back-button {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.screen-back-button:hover {
+  background: var(--surface-2);
 }
 
 
@@ -77,6 +104,161 @@
   animation: screen-enter 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Atmósfera mínima para que el estado del temporizador se perciba sin distraer. */
+.timer-screen::before {
+  content: "";
+  position: absolute;
+  inset: 24px;
+  border-radius: 42px;
+  background: radial-gradient(circle at 50% 38%, rgba(255, 75, 43, 0.04), transparent 58%);
+  opacity: 0;
+  transition: opacity 500ms ease;
+  pointer-events: none;
+}
+
+.timer-screen[data-status="running"]::before {
+  opacity: 0.55;
+  animation: ambient-breathe 4s ease-in-out infinite;
+}
+
+.timer-screen[data-status="paused"]::before { opacity: 0.45; }
+
+@keyframes ambient-breathe {
+  0%, 100% { transform: scale(0.98); opacity: 0.7; }
+  50% { transform: scale(1.02); opacity: 1; }
+}
+
+.phase-icon {
+  transition: color 300ms ease, transform 300ms var(--ease-out);
+}
+
+.timer-screen[data-status="running"] .phase-icon {
+  color: var(--accent-hot);
+  animation: phase-icon-float 3.2s ease-in-out infinite;
+}
+
+.timer-screen[data-status="paused"] .phase-icon { color: var(--text-muted); }
+
+@keyframes phase-icon-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.control-primary {
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.08), 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+
+.control-primary:hover:not(:disabled) {
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12), 0 8px 22px rgba(0, 0, 0, 0.3);
+}
+
+/* Feedback exclusivo de PAUSAR: aparece únicamente al pasar el cursor. */
+.control-primary[data-action="pause"] {
+  position: relative;
+  overflow: hidden;
+}
+
+.control-primary[data-action="pause"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(105deg, transparent 25%, rgba(255, 179, 71, 0.16) 50%, transparent 75%);
+  transform: translateX(-115%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.control-primary[data-action="pause"]:hover::after {
+  opacity: 1;
+  transform: translateX(115%);
+  transition: transform 520ms var(--ease-out), opacity 180ms ease;
+}
+
+.control-primary[data-action="pause"]:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.14), 0 8px 22px rgba(255, 75, 43, 0.18);
+}
+
+/* Transiciones direccionales para navegar como una ventana física. */
+@keyframes screen-enter-right {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes screen-enter-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.screen-enter-right {
+  animation: screen-enter-right 260ms var(--ease-out) both;
+}
+
+.screen-enter-up {
+  animation: screen-enter-up 300ms var(--ease-out) both;
+}
+
+/* La pantalla de ajustes mantiene el cuerpo estable mientras cambia la pestaña. */
+.settings-tab-content {
+  animation: screen-enter-right 220ms var(--ease-out) both;
+}
+
+.settings-tab-indicator {
+  position: absolute;
+  inset: 2px auto 2px 2px;
+  width: calc((100% - 4px) / 3);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: var(--surface-2);
+  box-shadow: var(--shadow-soft);
+  transition: transform 260ms var(--ease-out);
+  pointer-events: none;
+}
+
+.settings-tab-indicator[data-tab="notifications"] { transform: translateX(100%); }
+.settings-tab-indicator[data-tab="system"] { transform: translateX(200%); }
+
+.interactive-control {
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 180ms ease,
+    transform 160ms var(--ease-out);
+}
+
+.interactive-control:hover:not(:disabled) {
+  box-shadow: var(--shadow-soft);
+}
+
+.interactive-control:active:not(:disabled) {
+  transform: scale(0.96);
+  box-shadow: var(--shadow-pressed);
+}
+
+.metric-card {
+  animation: metric-enter 420ms var(--ease-out) both;
+}
+
+.metric-card:nth-child(2) { animation-delay: 50ms; }
+.metric-card:nth-child(3) { animation-delay: 100ms; }
+
+@keyframes metric-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.weekly-bar {
+  transform-origin: bottom;
+  animation: bar-enter 500ms var(--ease-out) both;
+}
+
+@keyframes bar-enter {
+  from { opacity: 0; transform: scaleY(0); }
+  to   { opacity: 1; transform: scaleY(1); }
+}
+
 /* Pulso de ignición del puntero al iniciar/reanudar */
 @keyframes pointer-ignite {
   0%   { transform: scale(1);   opacity: 0.6; }
@@ -91,8 +273,15 @@
 
 /* Respetar preferencia de movimiento reducido */
 @media (prefers-reduced-motion: reduce) {
-  .arc--running, .time--paused, .arc--complete, .screen-enter, .pointer--ignite {
+  .arc--running, .time--paused, .arc--complete, .screen-enter,
+  .screen-enter-right, .screen-enter-up, .settings-tab-content,
+  .metric-card, .weekly-bar, .pointer--ignite {
     animation: none;
     transition: none;
   }
+
+  .settings-tab-indicator { transition: none; }
+
+  .timer-screen[data-status="running"]::before { animation: none; }
+  .timer-screen[data-status="running"] .phase-icon { animation: none; }
 }

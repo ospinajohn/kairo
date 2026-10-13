@@ -32,6 +32,23 @@
   --accent-head:     #FFB347;
   --glow:            rgba(255, 75, 43, 0.45);
 
+  /* Profundidad e interacción */
+  --focus-ring:      rgba(255, 179, 71, 0.8);
+  --surface-glass:   rgba(28, 28, 30, 0.78);
+  --shadow-soft:     0 10px 28px rgba(0, 0, 0, 0.34);
+  --shadow-pressed:  0 2px 8px rgba(0, 0, 0, 0.32);
+  --ease-out:        cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Escala OpsFlow adaptada a la ventana compacta de Kairo */
+  --space-1:         4px;
+  --space-2:         8px;
+  --space-3:         12px;
+  --space-4:         16px;
+  --space-5:         24px;
+  --space-6:         32px;
+  --radius-control:  8px;
+  --control-height:  40px;
+
   /* Tipografía */
   --font: "Sora", "Outfit", "Segoe UI Variable", system-ui, sans-serif;
 
@@ -59,4 +76,14 @@ html, body, #root {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text-muted);
+}
+
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }

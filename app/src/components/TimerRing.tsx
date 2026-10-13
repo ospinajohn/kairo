@@ -103,7 +103,7 @@ function movePointer(
 // ── Componente ────────────────────────────────────────────────
 
 export function TimerRing({
-  progress, status, startedAt, totalMs, remainingMs,
+  progress, status, startedAt, totalMs, remainingMs, size = SIZE,
 }: TimerRingProps) {
   const canvasRef  = useRef<HTMLCanvasElement | null>(null);
   const rafRef     = useRef<number | null>(null);
@@ -215,8 +215,19 @@ export function TimerRing({
   const headX0 = SIZE / 2 + R * Math.cos(angle0);
   const headY0 = SIZE / 2 + R * Math.sin(angle0);
 
+  const scale = size / SIZE;
+
   return (
-    <div style={{ position: "relative", width: SIZE, height: SIZE }}>
+    <div style={{ position: "relative", width: size, height: size, overflow: "visible" }}>
+      <div style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: SIZE,
+        height: SIZE,
+        transform: `scale(${scale})`,
+        transformOrigin: "top left",
+      }}>
 
       {/* Resplandor ambiental difuso */}
       {hasArc && (
@@ -228,7 +239,7 @@ export function TimerRing({
           top:           "50%",
           transform:     "translate(-50%, -50%)",
           borderRadius:  "50%",
-          background:    "radial-gradient(circle, rgba(255,75,43,0.18) 0%, rgba(229,48,26,0.06) 50%, transparent 75%)",
+          background:    "radial-gradient(circle, rgba(255,75,43,0.10) 0%, rgba(229,48,26,0.03) 50%, transparent 75%)",
           filter:        "blur(20px)",
           pointerEvents: "none",
           opacity:       isPaused ? 0.35 : 1,
@@ -268,10 +279,8 @@ export function TimerRing({
           </filter>
         </defs>
 
-        {/* Ondas concéntricas decorativas */}
-        <circle cx={SIZE/2} cy={SIZE/2} r={R + 24} fill="none" stroke="var(--track-faint)" strokeWidth={1} opacity={0.32} />
-        <circle cx={SIZE/2} cy={SIZE/2} r={R + 52} fill="none" stroke="var(--track-faint)" strokeWidth={1} opacity={0.20} />
-        <circle cx={SIZE/2} cy={SIZE/2} r={R + 80} fill="none" stroke="var(--track-faint)" strokeWidth={1} opacity={0.10} />
+        {/* Guía exterior única para conservar profundidad sin ruido visual. */}
+        <circle cx={SIZE/2} cy={SIZE/2} r={R + 28} fill="none" stroke="var(--track-faint)" strokeWidth={1} opacity={0.18} />
 
         {/* Pista gris */}
         <circle cx={SIZE/2} cy={SIZE/2} r={R} fill="none" stroke="var(--track)" strokeWidth={TRACK} />
@@ -335,6 +344,7 @@ export function TimerRing({
           style={{ opacity: isPaused ? 0.7 : 1, transition: "opacity 300ms ease" }}
         />
       </svg>
+      </div>
     </div>
   );
 }

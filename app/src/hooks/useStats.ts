@@ -4,12 +4,12 @@
 // Gestiona la base de datos SQLite de sesiones completadas.
 // ============================================================
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import Database from "@tauri-apps/plugin-sql";
-import { CREATE_TABLES_SQL } from "../logic/stats";
-import type { DayStat, WeekStats } from "../logic/stats";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Database from '@tauri-apps/plugin-sql';
+import { CREATE_TABLES_SQL } from '../logic/stats';
+import type { DayStat, WeekStats } from '../logic/stats';
 
-const DB_PATH = "sqlite:kairo.db";
+const DB_PATH = 'sqlite:kairo.db';
 
 // ── Utilidades ────────────────────────────────────────────────────────────────
 
@@ -32,11 +32,11 @@ function calcStreak(days: DayStat[]): number {
   const today = todayISO();
   let streak = 0;
   let cursor = new Date(today);
-  const dayMap = new Map(days.map(d => [d.date, d]));
+  const dayMap = new Map(days.map((d) => [d.date, d]));
 
   while (true) {
     const key = cursor.toISOString().slice(0, 10);
-    if (dayMap.has(key) && (dayMap.get(key)!.focusSessions > 0)) {
+    if (dayMap.has(key) && dayMap.get(key)!.focusSessions > 0) {
       streak++;
       cursor.setDate(cursor.getDate() - 1);
     } else {
@@ -49,17 +49,20 @@ function calcStreak(days: DayStat[]): number {
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
 export interface UseStatsReturn {
-  weekStats:    WeekStats | null;
-  statsError:   string | null;
-  recordSession: (phase: "focus" | "short-break" | "long-break", durationMs: number) => Promise<void>;
-  exportJSON:   () => Promise<string>;
-  exportCSV:    () => Promise<string>;
-  importJSON:   (json: string) => Promise<void>;
+  weekStats: WeekStats | null;
+  statsError: string | null;
+  recordSession: (
+    phase: 'focus' | 'short-break' | 'long-break',
+    durationMs: number,
+  ) => Promise<void>;
+  exportJSON: () => Promise<string>;
+  exportCSV: () => Promise<string>;
+  importJSON: (json: string) => Promise<void>;
   refreshStats: () => Promise<void>;
 }
 
 export function useStats(): UseStatsReturn {
-  const dbRef                    = useRef<Database | null>(null);
+  const dbRef = useRef<Database | null>(null);
   const [weekStats, setWeekStats] = useState<WeekStats | null>(null);
   const [statsError, setStatsError] = useState<string | null>(null);
 
@@ -76,19 +79,22 @@ export function useStats(): UseStatsReturn {
           setStatsError(null);
         }
       } catch (e) {
-        console.error("Error al inicializar la base de datos:", e);
-        if (mounted) setStatsError("No se pudieron cargar las estadísticas.");
+        console.error('Error al inicializar la base de datos:', e);
+        if (mounted) setStatsError('No se pudieron cargar las estadísticas.');
       }
     })();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   async function loadWeekStats(db: Database) {
-    const days   = last7Days();
-    const from   = days[0];
-    const to     = days[days.length - 1];
+    const days = last7Days();
+    const from = days[0];
+    const to = days[days.length - 1];
 
-    const rows = await db.select<{ date: string; sessions: number; minutes: number }[]>(`
+    const rows = await db.select<{ date: string; sessions: number; minutes: number }[]>(
+      `
       SELECT
         substr(completed_at, 1, 10)         AS date,
         COUNT(*)                             AS sessions,
@@ -97,18 +103,20 @@ export function useStats(): UseStatsReturn {
       WHERE phase = 'focus'
         AND substr(completed_at, 1, 10) BETWEEN $1 AND $2
       GROUP BY date
-    `, [from, to]);
+    `,
+      [from, to],
+    );
 
-    const dayMap = new Map(rows.map(r => [r.date, r]));
-    const dayStats: DayStat[] = days.map(d => ({
-      date:          d,
+    const dayMap = new Map(rows.map((r) => [r.date, r]));
+    const dayStats: DayStat[] = days.map((d) => ({
+      date: d,
       focusSessions: dayMap.get(d)?.sessions ?? 0,
-      focusMinutes:  dayMap.get(d)?.minutes  ?? 0,
+      focusMinutes: dayMap.get(d)?.minutes ?? 0,
     }));
 
     const totalSessions = dayStats.reduce((s, d) => s + d.focusSessions, 0);
-    const totalMinutes  = dayStats.reduce((s, d) => s + d.focusMinutes,  0);
-    const streak        = calcStreak(dayStats);
+    const totalMinutes = dayStats.reduce((s, d) => s + d.focusMinutes, 0);
+    const streak = calcStreak(dayStats);
 
     setWeekStats({ days: dayStats, totalSessions, totalMinutes, streak });
   }
@@ -118,41 +126,49 @@ export function useStats(): UseStatsReturn {
   }, []);
 
   // Registrar una sesión completada
-  const recordSession = useCallback(async (
-    phase: "focus" | "short-break" | "long-break",
-    durationMs: number
-  ) => {
-    const db = dbRef.current;
-    if (!db) return;
-    await db.execute(
-      "INSERT INTO sessions (phase, duration_ms, completed_at) VALUES ($1, $2, $3)",
-      [phase, durationMs, new Date().toISOString()]
-    );
-    if (phase === "focus") await loadWeekStats(db);
-  }, []);
+  const recordSession = useCallback(
+    async (phase: 'focus' | 'short-break' | 'long-break', durationMs: number) => {
+      const db = dbRef.current;
+      if (!db) return;
+      await db.execute(
+        'INSERT INTO sessions (phase, duration_ms, completed_at) VALUES ($1, $2, $3)',
+        [phase, durationMs, new Date().toISOString()],
+      );
+      if (phase === 'focus') await loadWeekStats(db);
+    },
+    [],
+  );
 
   // Exportar todas las sesiones como JSON
   const exportJSON = useCallback(async (): Promise<string> => {
     const db = dbRef.current;
-    if (!db) return "[]";
-    const rows = await db.select<{
-      id: number; phase: string; duration_ms: number; completed_at: string;
-    }[]>("SELECT * FROM sessions ORDER BY completed_at");
+    if (!db) return '[]';
+    const rows = await db.select<
+      {
+        id: number;
+        phase: string;
+        duration_ms: number;
+        completed_at: string;
+      }[]
+    >('SELECT * FROM sessions ORDER BY completed_at');
     return JSON.stringify(rows, null, 2);
   }, []);
 
   // Exportar como CSV
   const exportCSV = useCallback(async (): Promise<string> => {
     const db = dbRef.current;
-    if (!db) return "";
-    const rows = await db.select<{
-      id: number; phase: string; duration_ms: number; completed_at: string;
-    }[]>("SELECT * FROM sessions ORDER BY completed_at");
-    const header = "id,phase,duration_ms,completed_at";
-    const lines  = rows.map(r =>
-      `${r.id},${r.phase},${r.duration_ms},${r.completed_at}`
-    );
-    return [header, ...lines].join("\n");
+    if (!db) return '';
+    const rows = await db.select<
+      {
+        id: number;
+        phase: string;
+        duration_ms: number;
+        completed_at: string;
+      }[]
+    >('SELECT * FROM sessions ORDER BY completed_at');
+    const header = 'id,phase,duration_ms,completed_at';
+    const lines = rows.map((r) => `${r.id},${r.phase},${r.duration_ms},${r.completed_at}`);
+    return [header, ...lines].join('\n');
   }, []);
 
   // Importar desde JSON (añade sin duplicar)
@@ -160,12 +176,14 @@ export function useStats(): UseStatsReturn {
     const db = dbRef.current;
     if (!db) return;
     const rows = JSON.parse(json) as {
-      phase: string; duration_ms: number; completed_at: string;
+      phase: string;
+      duration_ms: number;
+      completed_at: string;
     }[];
     for (const row of rows) {
       await db.execute(
-        "INSERT OR IGNORE INTO sessions (phase, duration_ms, completed_at) VALUES ($1, $2, $3)",
-        [row.phase, row.duration_ms, row.completed_at]
+        'INSERT OR IGNORE INTO sessions (phase, duration_ms, completed_at) VALUES ($1, $2, $3)',
+        [row.phase, row.duration_ms, row.completed_at],
       );
     }
     await loadWeekStats(db);

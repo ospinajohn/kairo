@@ -6,7 +6,7 @@
 // Botón volver: círculo 40px, borde 1px --border, ícono ‹
 // ============================================================
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 interface ValueEditorProps {
   title: string;
@@ -70,72 +70,81 @@ export function ValueEditor({
     width: 36,
     height: 36,
     borderRadius: 11,
-    border: "1px solid rgba(217, 217, 220, 0.85)",
-    background: "transparent",
-    color: "var(--text)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: enabled ? "pointer" : "default",
+    border: '1px solid rgba(217, 217, 220, 0.85)',
+    background: 'transparent',
+    color: 'var(--text)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: enabled ? 'pointer' : 'default',
     opacity: enabled ? 1 : 0.35,
-    userSelect: "none",
-    outline: "none",
-    transition: "background 100ms ease, transform 90ms ease, opacity 150ms ease",
+    userSelect: 'none',
+    outline: 'none',
+    transition: 'background 100ms ease, transform 90ms ease, opacity 150ms ease',
   });
 
   return (
     <div
-      className="screen-enter-right"
+      className='screen-enter-right'
       style={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
-        padding: "0 20px",
-        boxSizing: "border-box",
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        padding: '0 20px',
+        boxSizing: 'border-box',
       }}
     >
       {/* Botón Volver — círculo 40px en top: 24px, left: 24px */}
       <button
-        className="interactive-control"
+        className='interactive-control'
         onClick={onBack}
-        aria-label="Volver a ajustes"
+        aria-label='Volver a ajustes'
         style={{
-          position: "absolute",
+          position: 'absolute',
           top: 24,
           left: 20,
           width: 40,
           height: 40,
           borderRadius: 9999,
-          background: "transparent",
-          border: "1px solid var(--border)",
-          color: "var(--text)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          outline: "none",
-          transition: "background 120ms ease, transform 90ms ease",
+          background: 'transparent',
+          border: '1px solid var(--border)',
+          color: 'var(--text)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          outline: 'none',
+          transition: 'background 120ms ease, transform 90ms ease',
         }}
-        onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.96)")}
-        onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
+        onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M15 18l-6-6 6-6" />
+        <svg
+          width='16'
+          height='16'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          strokeWidth='1.75'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        >
+          <path d='M15 18l-6-6 6-6' />
         </svg>
       </button>
 
       {/* Título — centrado a ~31% del alto (top: 88px) */}
       <div
         style={{
-          position: "absolute",
+          position: 'absolute',
           top: 86,
           left: 0,
           right: 0,
-          textAlign: "center",
+          textAlign: 'center',
           fontSize: 20,
           fontWeight: 400,
-          color: "var(--text)",
-          fontFamily: "var(--font)",
+          color: 'var(--text)',
+          fontFamily: 'var(--font)',
         }}
       >
         {title}
@@ -144,13 +153,13 @@ export function ValueEditor({
       {/* Selector numérico — centrado en ~50% (top: 150px) */}
       <div
         style={{
-          position: "absolute",
+          position: 'absolute',
           top: 145,
           left: 0,
           right: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           gap: 28,
         }}
       >
@@ -161,27 +170,35 @@ export function ValueEditor({
           onMouseDown={() => canDecrease && startLongPress(handleDecrease)}
           onMouseUp={stopLongPress}
           onMouseLeave={stopLongPress}
-          aria-label="Disminuir valor"
+          aria-label='Disminuir valor'
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <line x1="5" y1="12" x2="19" y2="12" />
+          <svg
+            width='14'
+            height='14'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='currentColor'
+            strokeWidth='2'
+            strokeLinecap='round'
+          >
+            <line x1='5' y1='12' x2='19' y2='12' />
           </svg>
         </button>
 
         {/* Número */}
         <span
-          className="num"
+          className='num'
           style={{
             fontSize: 44,
             fontWeight: 400,
-            color: "var(--text)",
-            fontFamily: "var(--font)",
+            color: 'var(--text)',
+            fontFamily: 'var(--font)',
             minWidth: 60,
-            textAlign: "center",
+            textAlign: 'center',
             lineHeight: 1,
           }}
         >
-          {String(value).padStart(2, "0")}
+          {String(value).padStart(2, '0')}
         </span>
 
         {/* Botón [+] */}
@@ -191,11 +208,19 @@ export function ValueEditor({
           onMouseDown={() => canIncrease && startLongPress(handleIncrease)}
           onMouseUp={stopLongPress}
           onMouseLeave={stopLongPress}
-          aria-label="Aumentar valor"
+          aria-label='Aumentar valor'
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
+          <svg
+            width='14'
+            height='14'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='currentColor'
+            strokeWidth='2'
+            strokeLinecap='round'
+          >
+            <line x1='12' y1='5' x2='12' y2='19' />
+            <line x1='5' y1='12' x2='19' y2='12' />
           </svg>
         </button>
       </div>
@@ -203,15 +228,15 @@ export function ValueEditor({
       {/* Unidad — centrada bajo el número (top: 205px) */}
       <div
         style={{
-          position: "absolute",
+          position: 'absolute',
           top: 205,
           left: 0,
           right: 0,
-          textAlign: "center",
+          textAlign: 'center',
           fontSize: 12,
           fontWeight: 400,
-          color: "var(--text-muted)",
-          fontFamily: "var(--font)",
+          color: 'var(--text-muted)',
+          fontFamily: 'var(--font)',
         }}
       >
         {unit}

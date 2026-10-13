@@ -25,7 +25,7 @@ export function WindowControls() {
     background:     "transparent",
     cursor:         "pointer",
     padding:        0,
-    transition:     "background 150ms ease, transform 120ms ease",
+    transition:     "background 220ms ease-out, transform 220ms var(--ease-out)",
   };
 
   return (
@@ -41,7 +41,7 @@ export function WindowControls() {
             background: hovered === "min"
               ? "rgba(255,255,255,0.14)"
               : "transparent",
-            transform: hovered === "min" ? "scale(1.1)" : "scale(1)",
+            transform: hovered === "min" ? "scale(1.04)" : "scale(1)",
           }}
           title="Minimizar"
           aria-label="Minimizar"
@@ -64,7 +64,7 @@ export function WindowControls() {
             background: hovered === "close"
               ? "rgba(229, 48, 26, 0.75)"
               : "transparent",
-            transform: hovered === "close" ? "scale(1.1)" : "scale(1)",
+            transform: hovered === "close" ? "scale(1.04)" : "scale(1)",
           }}
           title="Cerrar"
           aria-label="Cerrar"

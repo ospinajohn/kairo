@@ -50,8 +50,8 @@ export function MainControls({ status, onStart, onPause, onResume, onReset, onSe
                       : onStart;
 
   const circleBtn: React.CSSProperties = {
-    width:          44,
-    height:         44,
+    width:          40,
+    height:         40,
     borderRadius:   9999,
     background:     "transparent",
     color:          "var(--text-muted)",
@@ -61,46 +61,51 @@ export function MainControls({ status, onStart, onPause, onResume, onReset, onSe
     justifyContent: "center",
     cursor:         "pointer",
     flexShrink:     0,
-    transition:     "color 120ms ease-out, transform 90ms ease-out",
+    transition:     "color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 180ms ease, transform 160ms var(--ease-out)",
   };
 
   return (
     <div style={{
-      display:     "flex",
-      alignItems:  "center",
-      width:       "100%",
-      paddingLeft:  46,   // 14% de 320px ≈ 45px → centrar círculo izquierdo
-      paddingRight: 46,
-      justifyContent: "space-between",
+      display: "grid",
+      gridTemplateColumns: "1fr auto 1fr",
+      alignItems: "center",
+      width: "100%",
+      padding: "0 26px",
+      gap: "var(--space-3)",
     }}>
       {/* Botón reiniciar */}
-      <button
-        style={circleBtn}
-        onClick={onReset}
-        aria-label="Reiniciar fase"
-        onMouseEnter={e => { e.currentTarget.style.color = "var(--text)"; }}
-        onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
-        onMouseDown={e  => { e.currentTarget.style.transform = "scale(0.96)"; }}
-        onMouseUp={e    => { e.currentTarget.style.transform = "scale(1)"; }}
-      >
-        <ResetIcon />
-      </button>
+      <div style={{ display: "flex", justifyContent: "flex-start" }}>
+        <button
+          className="interactive-control"
+          style={circleBtn}
+          onClick={onReset}
+          aria-label="Reiniciar fase"
+          onMouseEnter={e => { e.currentTarget.style.color = "var(--text)"; }}
+          onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
+          onMouseDown={e  => { e.currentTarget.style.transform = "scale(0.96)"; }}
+          onMouseUp={e    => { e.currentTarget.style.transform = "scale(1)"; }}
+        >
+          <ResetIcon />
+        </button>
+      </div>
 
       {/* Pill central — 107x40px */}
       <button
+        className="interactive-control control-primary"
+        data-action={status === "running" ? "pause" : status === "paused" ? "resume" : "start"}
         style={{
-          width:          107,
-          height:         40,
+          width:          108,
+          height:         "var(--control-height)",
           borderRadius:   9999,
           background:     "var(--surface-3)",
           color:          "var(--text)",
           border:         "none",
-          fontSize:       11,
+          fontSize:       10,
           fontWeight:     500,
           letterSpacing:  "0.14em",
           fontFamily:     "var(--font)",
           cursor:         "pointer",
-          transition:     "background 120ms ease-out, transform 90ms ease-out",
+          transition:     "background 160ms ease, box-shadow 180ms ease, transform 160ms var(--ease-out)",
           flexShrink:     0,
         }}
         onClick={handlePrimary}
@@ -112,36 +117,38 @@ export function MainControls({ status, onStart, onPause, onResume, onReset, onSe
         {primaryLabel(status)}
       </button>
 
-      {/* Botón ajustes + stats: click abre ajustes, doble click (o long press no disponible) abre stats */}
-      {onStats && (
+      <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+        {onStats && (
+          <button
+            className="interactive-control"
+            style={{ ...circleBtn, position: "relative" }}
+            onClick={onStats}
+            aria-label="Ver estadísticas"
+            onMouseEnter={e => { e.currentTarget.style.color = "var(--text)"; }}
+            onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
+            onMouseDown={e  => { e.currentTarget.style.transform = "scale(0.96)"; }}
+            onMouseUp={e    => { e.currentTarget.style.transform = "scale(1)"; }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6"  y1="20" x2="6"  y2="14"/>
+            </svg>
+          </button>
+        )}
         <button
-          style={{ ...circleBtn, position: "relative" }}
-          onClick={onStats}
-          aria-label="Ver estadísticas"
+          className="interactive-control"
+          style={circleBtn}
+          onClick={onSettings}
+          aria-label="Abrir ajustes"
           onMouseEnter={e => { e.currentTarget.style.color = "var(--text)"; }}
           onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
           onMouseDown={e  => { e.currentTarget.style.transform = "scale(0.96)"; }}
           onMouseUp={e    => { e.currentTarget.style.transform = "scale(1)"; }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="20" x2="18" y2="10"/>
-            <line x1="12" y1="20" x2="12" y2="4"/>
-            <line x1="6"  y1="20" x2="6"  y2="14"/>
-          </svg>
+          <GearIcon />
         </button>
-      )}
-      {/* Botón ajustes */}
-      <button
-        style={circleBtn}
-        onClick={onSettings}
-        aria-label="Abrir ajustes"
-        onMouseEnter={e => { e.currentTarget.style.color = "var(--text)"; }}
-        onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
-        onMouseDown={e  => { e.currentTarget.style.transform = "scale(0.96)"; }}
-        onMouseUp={e    => { e.currentTarget.style.transform = "scale(1)"; }}
-      >
-        <GearIcon />
-      </button>
+      </div>
     </div>
   );
 }

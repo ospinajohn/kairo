@@ -14,6 +14,7 @@ interface SwitchProps {
 export function Switch({ checked, onChange, id, ariaLabel, disabled = false }: SwitchProps) {
   return (
     <button
+      className="interactive-control"
       id={id}
       type="button"
       role="switch"

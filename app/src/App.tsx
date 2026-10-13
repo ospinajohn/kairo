@@ -41,7 +41,7 @@ export default function App() {
   const { play: playSound }                                     = useSound(soundEnabled);
   const { alwaysOnTop, autostart, minimizeToTray, toggleAlwaysOnTop, toggleAutostart, toggleMinimizeToTray } = useWindowControls();
   const { compact, toggleCompact }                              = useCompactMode();
-  const { weekStats, recordSession, exportJSON, exportCSV, importJSON } = useStats();
+  const { weekStats, statsError, recordSession, exportJSON, exportCSV, importJSON } = useStats();
 
   // Callback al completar una fase: notificación + sonido + estadísticas
   const onPhaseComplete = (s: TimerState) => {
@@ -64,7 +64,7 @@ export default function App() {
   const handleValueChange  = (val: number)       => setField(editingKey, val);
 
   const editorMeta: Record<SettingsKey, { title: string; unit: string }> = {
-    focusDuration:      { title: "Sesión de foco",  unit: "min"      },
+    focusDuration:      { title: "Concentración",    unit: "min"      },
     shortBreakDuration: { title: "Descanso corto",  unit: "min"      },
     longBreakDuration:  { title: "Descanso largo",  unit: "min"      },
     longBreakAfter:     { title: "Descanso tras",   unit: "Sesiones" },
@@ -134,7 +134,14 @@ export default function App() {
               display: "flex", alignItems: "center", justifyContent: "center",
             }}
           >
-            ⤢
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
+                 aria-hidden="true">
+              <path d="M8 3H3v5" />
+              <path d="M3 3l7 7" />
+              <path d="M16 21h5v-5" />
+              <path d="M21 21l-7-7" />
+            </svg>
           </button>
         </div>
       )}
@@ -144,7 +151,11 @@ export default function App() {
         <>
           {/* PANTALLA 1: TEMPORIZADOR */}
           {currentScreen === "timer" && (
-            <div className="screen-enter" style={{ position: "relative", width: "100%", height: "100%" }}>
+            <div
+              className="screen-enter timer-screen"
+              data-status={state.status}
+              style={{ position: "relative", width: "100%", height: "100%" }}
+            >
 
               <div style={{
                 position: "absolute", top: 134, left: "50%",
@@ -159,7 +170,7 @@ export default function App() {
                 />
               </div>
 
-              <div style={{
+              <div className="phase-icon" style={{
                 position: "absolute", top: 86, left: 0, right: 0,
                 display: "flex", justifyContent: "center",
                 color: "var(--text-muted)", pointerEvents: "none",
@@ -248,6 +259,7 @@ export default function App() {
           {currentScreen === "stats" && (
             <StatsScreen
               stats={weekStats}
+              error={statsError}
               onClose={() => setCurrentScreen("timer")}
               onExport={async (fmt) => {
                 const data = fmt === "json" ? await exportJSON() : await exportCSV();

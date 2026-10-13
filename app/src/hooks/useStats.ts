@@ -50,6 +50,7 @@ function calcStreak(days: DayStat[]): number {
 
 export interface UseStatsReturn {
   weekStats:    WeekStats | null;
+  statsError:   string | null;
   recordSession: (phase: "focus" | "short-break" | "long-break", durationMs: number) => Promise<void>;
   exportJSON:   () => Promise<string>;
   exportCSV:    () => Promise<string>;
@@ -60,6 +61,7 @@ export interface UseStatsReturn {
 export function useStats(): UseStatsReturn {
   const dbRef                    = useRef<Database | null>(null);
   const [weekStats, setWeekStats] = useState<WeekStats | null>(null);
+  const [statsError, setStatsError] = useState<string | null>(null);
 
   // Inicializar DB al montar
   useEffect(() => {
@@ -69,9 +71,13 @@ export function useStats(): UseStatsReturn {
         const db = await Database.load(DB_PATH);
         await db.execute(CREATE_TABLES_SQL);
         dbRef.current = db;
-        if (mounted) await loadWeekStats(db);
+        if (mounted) {
+          await loadWeekStats(db);
+          setStatsError(null);
+        }
       } catch (e) {
         console.error("Error al inicializar la base de datos:", e);
+        if (mounted) setStatsError("No se pudieron cargar las estadísticas.");
       }
     })();
     return () => { mounted = false; };
@@ -165,5 +171,5 @@ export function useStats(): UseStatsReturn {
     await loadWeekStats(db);
   }, []);
 
-  return { weekStats, recordSession, exportJSON, exportCSV, importJSON, refreshStats };
+  return { weekStats, statsError, recordSession, exportJSON, exportCSV, importJSON, refreshStats };
 }

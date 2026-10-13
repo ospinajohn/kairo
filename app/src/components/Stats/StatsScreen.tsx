@@ -8,6 +8,7 @@ import type { WeekStats } from "../../logic/stats";
 
 interface StatsScreenProps {
   stats:      WeekStats | null;
+  error?:     string | null;
   onClose:    () => void;
   onExport:   (format: "json" | "csv") => void;
   onImport:   () => void;
@@ -15,13 +16,13 @@ interface StatsScreenProps {
 
 const DAYS_ES = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
-export function StatsScreen({ stats, onClose, onExport, onImport }: StatsScreenProps) {
+export function StatsScreen({ stats, error, onClose, onExport, onImport }: StatsScreenProps) {
   const maxSessions = stats
     ? Math.max(...stats.days.map(d => d.focusSessions), 1)
     : 1;
 
   return (
-    <div className="screen-enter"
+    <div className="screen-enter-up"
       style={{ position: "relative", width: "100%", height: "100%", userSelect: "none" }}>
 
       {/* Encabezado */}
@@ -29,28 +30,22 @@ export function StatsScreen({ stats, onClose, onExport, onImport }: StatsScreenP
         position: "absolute", top: 24, left: 0, right: 0,
         display: "flex", alignItems: "center", justifyContent: "center", height: 40,
       }}>
+        <button
+          className="screen-back-button interactive-control"
+          type="button"
+          onClick={onClose}
+          aria-label="Volver al temporizador"
+          title="Volver al temporizador"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
+               aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
         <span style={{ fontSize: 20, fontWeight: 400, color: "var(--text)", fontFamily: "var(--font)" }}>
           Estadísticas
         </span>
-        <button onClick={onClose} aria-label="Cerrar estadísticas"
-          style={{
-            position: "absolute", right: 20,
-            width: 40, height: 40, borderRadius: 9999,
-            backgroundColor: "var(--surface-2)",
-            border: "1px solid var(--border-subtle)",
-            color: "var(--text)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            cursor: "pointer", outline: "none",
-          }}
-          onMouseDown={e => (e.currentTarget.style.transform = "scale(0.96)")}
-          onMouseUp={e   => (e.currentTarget.style.transform = "scale(1)")}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
-            <line x1="18" y1="6"  x2="6"  y2="18" />
-            <line x1="6"  y1="6"  x2="18" y2="18" />
-          </svg>
-        </button>
       </div>
 
       {/* Contenido */}
@@ -59,6 +54,20 @@ export function StatsScreen({ stats, onClose, onExport, onImport }: StatsScreenP
         display: "flex", flexDirection: "column", gap: 16,
       }}>
 
+        {error && (
+          <div role="alert" style={{
+            padding: "10px 12px",
+            borderRadius: 8,
+            border: "1px solid rgba(255, 179, 71, 0.28)",
+            background: "rgba(255, 179, 71, 0.08)",
+            color: "var(--accent-head)",
+            fontSize: 11,
+            lineHeight: 1.4,
+          }}>
+            {error}
+          </div>
+        )}
+
         {/* Resumen numérico */}
         <div style={{ display: "flex", gap: 8 }}>
           {[
@@ -66,7 +75,7 @@ export function StatsScreen({ stats, onClose, onExport, onImport }: StatsScreenP
             { label: "Minutos",  value: stats?.totalMinutes  ?? 0 },
             { label: "Racha",    value: stats?.streak        ?? 0, suffix: "d" },
           ].map(item => (
-            <div key={item.label} style={{
+            <div key={item.label} className="metric-card" style={{
               flex: 1, borderRadius: 12,
               backgroundColor: "var(--surface-1)",
               border: "1px solid var(--border-subtle)",
@@ -106,13 +115,14 @@ export function StatsScreen({ stats, onClose, onExport, onImport }: StatsScreenP
                   flex: 1, display: "flex", flexDirection: "column",
                   alignItems: "center", gap: 4,
                 }}>
-                  <div style={{
+                  <div className="weekly-bar" style={{
                     width: "100%", height, borderRadius: 4,
                     background: day.focusSessions > 0
                       ? "linear-gradient(180deg, #FF7A3D 0%, #E5301A 100%)"
                       : "var(--track)",
                     opacity: isToday ? 1 : 0.75,
                     transition: "height 400ms ease",
+                    animationDelay: `${(stats?.days.indexOf(day) ?? 0) * 35}ms`,
                   }} />
                   <span style={{
                     fontSize: 9, color: isToday ? "var(--accent)" : "var(--text-muted)",
@@ -128,13 +138,13 @@ export function StatsScreen({ stats, onClose, onExport, onImport }: StatsScreenP
 
         {/* Botones exportar/importar */}
         <div style={{ display: "flex", gap: 8, marginTop: "auto" }}>
-          <button onClick={() => onExport("json")} style={btnStyle}>
+          <button className="interactive-control" type="button" onClick={() => onExport("json")} style={btnStyle}>
             Exportar JSON
           </button>
-          <button onClick={() => onExport("csv")} style={btnStyle}>
+          <button className="interactive-control" type="button" onClick={() => onExport("csv")} style={btnStyle}>
             Exportar CSV
           </button>
-          <button onClick={onImport} style={{ ...btnStyle, color: "var(--text-muted)" }}>
+          <button className="interactive-control" type="button" onClick={onImport} style={{ ...btnStyle, color: "var(--text-muted)" }}>
             Importar
           </button>
         </div>

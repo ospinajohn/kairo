@@ -59,7 +59,7 @@ export function SettingsScreen({
   const [activeTab, setActiveTab] = useState<Tab>("duration");
 
   const durationRows: { key: SettingsKey; label: string; value: number; unit: string }[] = [
-    { key: "focusDuration",      label: "Sesión de foco",      value: config.focusDuration,      unit: "min"  },
+    { key: "focusDuration",      label: "Concentración",        value: config.focusDuration,      unit: "min"  },
     { key: "shortBreakDuration", label: "Descanso corto",      value: config.shortBreakDuration, unit: "min"  },
     { key: "longBreakDuration",  label: "Descanso largo",      value: config.longBreakDuration,  unit: "min"  },
     { key: "longBreakAfter",     label: "Descanso largo tras", value: config.longBreakAfter,     unit: "Ses." },
@@ -67,7 +67,7 @@ export function SettingsScreen({
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "duration",      label: "DURACIÓN" },
-    { id: "notifications", label: "ALERTAS"  },
+    { id: "notifications", label: "NOTIFICACIONES"  },
     { id: "system",        label: "SISTEMA"  },
   ];
 
@@ -80,29 +80,22 @@ export function SettingsScreen({
         position: "absolute", top: 24, left: 0, right: 0,
         display: "flex", alignItems: "center", justifyContent: "center", height: 40,
       }}>
+        <button
+          className="screen-back-button interactive-control"
+          type="button"
+          onClick={onClose}
+          aria-label="Volver al temporizador"
+          title="Volver al temporizador"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
+               aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
         <span style={{ fontSize: 20, fontWeight: 400, color: "var(--text)", fontFamily: "var(--font)" }}>
           Ajustes
         </span>
-        <button onClick={onClose} aria-label="Cerrar ajustes"
-          style={{
-            position: "absolute", right: 20,
-            width: 40, height: 40, borderRadius: 9999,
-            backgroundColor: "var(--surface-2)",
-            border: "1px solid var(--border-subtle)",
-            color: "var(--text)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            cursor: "pointer", outline: "none",
-            transition: "background 120ms ease, transform 90ms ease",
-          }}
-          onMouseDown={e => (e.currentTarget.style.transform = "scale(0.96)")}
-          onMouseUp={e   => (e.currentTarget.style.transform = "scale(1)")}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
-            <line x1="18" y1="6"  x2="6"  y2="18" />
-            <line x1="6"  y1="6"  x2="18" y2="18" />
-          </svg>
-        </button>
       </div>
 
       {/* Pestañas pill */}
@@ -114,16 +107,19 @@ export function SettingsScreen({
         border: "1px solid var(--border-subtle)",
         display: "flex", padding: 2, boxSizing: "border-box",
       }}>
+        <span className="settings-tab-indicator" data-tab={activeTab} aria-hidden="true" />
         {tabs.map(tab => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+          <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)}
+            aria-selected={activeTab === tab.id}
             style={{
               flex: 1, borderRadius: 9999,
-              border:          activeTab === tab.id ? "1px solid var(--border)" : "none",
-              backgroundColor: activeTab === tab.id ? "var(--surface-2)"        : "transparent",
+              position: "relative", zIndex: 1,
+              border:          "none",
+              backgroundColor: "transparent",
               color:           activeTab === tab.id ? "var(--text)"              : "var(--text-muted)",
               fontSize: 9, fontWeight: 500, letterSpacing: "0.12em",
               cursor: "pointer", outline: "none",
-              transition: "all 180ms ease", fontFamily: "var(--font)",
+              transition: "color 180ms ease", fontFamily: "var(--font)",
             }}>
             {tab.label}
           </button>
@@ -138,7 +134,7 @@ export function SettingsScreen({
 
         {/* DURACIÓN */}
         {activeTab === "duration" && durationRows.map(row => (
-          <div key={row.key} onClick={() => onEditField(row.key)}
+          <div key={row.key} className="settings-tab-content" onClick={() => onEditField(row.key)}
             style={{
               display: "flex", alignItems: "center", justifyContent: "space-between",
               height: 40, padding: "0 12px", borderRadius: 12, cursor: "pointer",
@@ -166,7 +162,7 @@ export function SettingsScreen({
 
         {/* ALERTAS */}
         {activeTab === "notifications" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 6, paddingTop: 4 }}>
+          <div className="settings-tab-content" style={{ display: "flex", flexDirection: "column", gap: 6, paddingTop: 4 }}>
             <Row label="Sonido al finalizar"
                  right={<Switch checked={soundEnabled} onChange={onToggleSound} ariaLabel="Sonido al finalizar" />} />
             <Row label="Notificaciones de escritorio"
@@ -178,7 +174,7 @@ export function SettingsScreen({
 
         {/* SISTEMA */}
         {activeTab === "system" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 6, paddingTop: 4 }}>
+          <div className="settings-tab-content" style={{ display: "flex", flexDirection: "column", gap: 6, paddingTop: 4 }}>
             <Row label="Siempre visible"
                  right={<Switch checked={alwaysOnTop} onChange={onToggleAlwaysOnTop} ariaLabel="Mantener siempre visible" />} />
             <Row label="Iniciar con Windows"

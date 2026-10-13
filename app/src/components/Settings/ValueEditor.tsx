@@ -85,7 +85,7 @@ export function ValueEditor({
 
   return (
     <div
-      className="screen-enter"
+      className="screen-enter-right"
       style={{
         position: "relative",
         width: "100%",
@@ -96,6 +96,7 @@ export function ValueEditor({
     >
       {/* Botón Volver — círculo 40px en top: 24px, left: 24px */}
       <button
+        className="interactive-control"
         onClick={onBack}
         aria-label="Volver a ajustes"
         style={{

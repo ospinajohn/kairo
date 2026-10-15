@@ -1,48 +1,5 @@
 # Kairo
 
-Aplicación de temporizador Pomodoro instalable para Windows.
-Interfaz visual oscura, funcionamiento completamente local, sin cuentas ni conexión a internet.
-
-## Estado del proyecto
-
-En definición. La documentación inicial está lista y esperando aprobación del responsable.
-No hay código de aplicación todavía.
-
-## Documentación
-
-Lee [`AGENTS.md`](AGENTS.md) primero. Contiene el orden de lectura, el flujo de trabajo
-y las reglas para colaboradores e IAs.
-
-La documentación completa está en [`docs/`](docs/):
-
-| Archivo                                        | Contenido                                       |
-| ---------------------------------------------- | ----------------------------------------------- |
-| [`docs/index.md`](docs/index.md)               | Mapa de la documentación                        |
-| [`docs/product.md`](docs/product.md)           | Qué es Kairo y su alcance                       |
-| [`docs/requirements.md`](docs/requirements.md) | Requisitos funcionales y no funcionales         |
-| [`docs/design.md`](docs/design.md)             | Sistema visual (colores, tipografía, pantallas) |
-| [`docs/plan.md`](docs/plan.md)                 | Stack técnico — disponible en Etapa 2           |
-| [`docs/tasks.md`](docs/tasks.md)               | Tareas con estado y dependencias                |
-| [`docs/decisions.md`](docs/decisions.md)       | Registro de decisiones importantes              |
-| [`docs/handoff.md`](docs/handoff.md)           | Estado actual y próximos pasos                  |
-
-## Alcance
-
-**MVP** — temporizador funcional con notificaciones nativas, configuración persistente
-y ventana sin bordes arrastrable.
-
-**Pro/escritorio** — bandeja del sistema, estadísticas locales, inicio con Windows,
-modo compacto, sonidos opcionales y exportación de datos.
-
-Plataforma: Windows 10 (≥ 1903) / Windows 11, x64.
-Distribución: instalador `.exe`.
-
-## Comandos de desarrollo
-
-No disponibles todavía. El stack técnico se definirá en la Etapa 2.
-
-# Kairo
-
  <p align="center">
 	 <img src="app/src-tauri/icons/icon.png" alt="Kairo" width="128" height="128">
  </p>
@@ -53,7 +10,7 @@ No disponibles todavía. El stack técnico se definirá en la Etapa 2.
  </p>
 
  <p align="center">
-	 <a href="../../releases/latest/download/Kairo_0.1.0_x64-setup.exe">Descargar para Windows / Download for Windows</a>
+	 <a href="../../releases/latest">Descargar para Windows / Download for Windows</a>
 	 ·
 	 <a href="../../releases">Todas las versiones / All releases</a>
  </p>
@@ -65,7 +22,8 @@ No disponibles todavía. El stack técnico se definirá en la Etapa 2.
 	 <img src="https://img.shields.io/badge/Tests-24%20passing-2EA043" alt="24 tests passing">
  </p>
 
-> **Nota sobre la descarga / Download note:** el enlace apunta al instalador de la release más reciente de GitHub. Para que funcione, el asset debe publicarse con el nombre exacto `Kairo_0.1.0_x64-setup.exe`.
+> **Nota sobre la descarga / Download note:** el enlace abre la release más reciente de GitHub,
+> donde se encuentra el instalador correspondiente a esa versión.
 
 ## Español
 
@@ -74,6 +32,15 @@ No disponibles todavía. El stack técnico se definirá en la Etapa 2.
 Kairo es una aplicación Pomodoro instalable para Windows. Arranca directamente en el temporizador, funciona de forma local y no requiere cuentas, conexión a internet ni servicios externos.
 
 Su interfaz está diseñada como un pequeño instrumento de concentración: oscuro, silencioso y con el progreso en rojo-naranja como único acento visual.
+
+### Demo
+
+<p align="center">
+	<video src="docs/media/kairo-demo.mp4" controls muted loop width="720" aria-label="Demo animada de Kairo"></video>
+</p>
+
+La demo se renderiza con [HyperFrames](https://github.com/heygen-com/hyperframes) a partir de
+HTML y CSS, sin incorporarlo como dependencia de la aplicación.
 
 ### Funciones
 
@@ -98,14 +65,20 @@ Su interfaz está diseñada como un pequeño instrumento de concentración: oscu
 - Arquitectura x64.
 - No requiere permisos de administrador para la instalación estándar.
 
-### Instalación
+### Descargas e instalación
 
-1.  Descarga `Kairo_0.1.0_x64-setup.exe` desde el botón superior.
+Las versiones publicadas están disponibles en [GitHub Releases](../../releases). Cada release
+incluye el instalador NSIS para Windows x64.
+
+1.  Descarga `Kairo_<version>_x64-setup.exe` desde el botón superior.
 2.  Ejecuta el instalador.
 3.  Kairo se instalará para el usuario actual.
 4.  Abre Kairo desde el menú Inicio.
 
 El instalador es NSIS y actualmente ocupa aproximadamente 2,35 MiB.
+
+Las releases se generan automáticamente al publicar un tag con formato `vX.Y.Z`. Consulta
+[RELEASING.md](RELEASING.md) para publicar una nueva versión.
 
 ### Privacidad
 
@@ -174,6 +147,7 @@ app/src-tauri/target/release/bundle/nsis/Kairo_0.1.0_x64-setup.exe
 - [Tareas y verificaciones](docs/tasks.md)
 - [Decisiones](docs/decisions.md)
 - [Estado actual](docs/handoff.md)
+- [Publicar una versión](RELEASING.md)
 
 ## English
 
@@ -182,6 +156,15 @@ app/src-tauri/target/release/bundle/nsis/Kairo_0.1.0_x64-setup.exe
 Kairo is an installable Pomodoro desktop app for Windows. It opens directly on the timer, runs locally, and requires no account, internet connection, or external service.
 
 Its interface is designed as a small focus instrument: dark, quiet, and centered around a warm red-orange progress accent.
+
+### Demo
+
+<p align="center">
+	<video src="docs/media/kairo-demo.mp4" controls muted loop width="720" aria-label="Animated Kairo demo"></video>
+</p>
+
+The demo is rendered with [HyperFrames](https://github.com/heygen-com/hyperframes) from HTML and
+CSS, without adding it as an application runtime dependency.
 
 ### Features
 
@@ -206,14 +189,20 @@ Its interface is designed as a small focus instrument: dark, quiet, and centered
 - x64 architecture.
 - Standard installation does not require administrator privileges.
 
-### Installation
+### Download and installation
 
-1.  Download `Kairo_0.1.0_x64-setup.exe` using the button at the top.
+Published versions are available in [GitHub Releases](../../releases). Each release includes
+the NSIS installer for Windows x64.
+
+1.  Download `Kairo_<version>_x64-setup.exe` using the button at the top.
 2.  Run the installer.
 3.  Kairo will install for the current user.
 4.  Launch Kairo from the Start menu.
 
 The installer uses NSIS and is currently approximately 2.35 MiB.
+
+Releases are generated automatically when a tag matching `vX.Y.Z` is pushed. See
+[RELEASING.md](RELEASING.md) for the release procedure.
 
 ### Privacy
 
@@ -282,6 +271,7 @@ app/src-tauri/target/release/bundle/nsis/Kairo_0.1.0_x64-setup.exe
 - [Tasks and verification](docs/tasks.md)
 - [Decisions](docs/decisions.md)
 - [Current handoff](docs/handoff.md)
+- [Publishing a release](RELEASING.md)
 
 ## License
 

@@ -1,2 +1,5 @@
 # Project documentation excluded from version control
-/docs/
+/docs/*
+!/docs/media/
+!/docs/media/**
+/docs/media/**/.hyperframes/

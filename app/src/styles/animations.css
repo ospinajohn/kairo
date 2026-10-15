@@ -8,8 +8,8 @@
   position: absolute;
   top: 24px;
   right: 20px;
-  width: 56px;
-  height: 40px;
+  width: 84px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -60,53 +60,82 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  outline: none;
 }
 
 .screen-back-button:hover {
   background: var(--surface-2);
 }
 
-
 /* Respiración del brillo del arco (corriendo) */
 @keyframes breathe {
-  0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 75, 43, 0.35)); }
-  50%       { filter: drop-shadow(0 0 18px rgba(255, 75, 43, 0.55)); }
+  0%,
+  100% {
+    filter: drop-shadow(0 0 10px rgba(255, 75, 43, 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 18px rgba(255, 75, 43, 0.55));
+  }
 }
 
 /* Parpadeo suave del tiempo en pausa */
 @keyframes blink-pause {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.55; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.72;
+  }
 }
 
 /* Entrada de pantalla: deslizamiento corto + fundido */
 @keyframes screen-enter {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Pulso de fin de fase */
 @keyframes phase-complete {
-  0%   { filter: drop-shadow(0 0 10px rgba(255, 179, 71, 0.4)); }
-  40%  { filter: drop-shadow(0 0 28px rgba(255, 179, 71, 0.85)); }
-  100% { filter: drop-shadow(0 0 10px rgba(255, 179, 71, 0.4)); }
+  0% {
+    filter: drop-shadow(0 0 10px rgba(255, 179, 71, 0.4));
+  }
+  40% {
+    filter: drop-shadow(0 0 28px rgba(255, 179, 71, 0.85));
+  }
+  100% {
+    filter: drop-shadow(0 0 10px rgba(255, 179, 71, 0.4));
+  }
 }
 
 /* Clases de animación */
-.arc--running  { animation: breathe 4s ease-in-out infinite; }
-.arc--paused   { filter: drop-shadow(0 0 10px rgba(255, 75, 43, 0.2)); opacity: 0.6; }
-.arc--complete { animation: phase-complete 0.8s ease-in-out; }
+.arc--running {
+  animation: breathe 4s ease-in-out infinite;
+}
+.arc--paused {
+  filter: drop-shadow(0 0 10px rgba(255, 75, 43, 0.2));
+  opacity: 0.6;
+}
+.arc--complete {
+  animation: phase-complete 0.8s ease-in-out;
+}
 
-.time--paused  { animation: blink-pause 2s ease-in-out infinite; }
+.time--paused {
+  animation: blink-pause 3s ease-in-out infinite;
+}
 
-.screen-enter  {
+.screen-enter {
   animation: screen-enter 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* Atmósfera mínima para que el estado del temporizador se perciba sin distraer. */
 .timer-screen::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 24px;
   border-radius: 42px;
@@ -116,79 +145,122 @@
   pointer-events: none;
 }
 
-.timer-screen[data-status="running"]::before {
+.timer-screen[data-status='running']::before {
   opacity: 0.55;
   animation: ambient-breathe 4s ease-in-out infinite;
 }
 
-.timer-screen[data-status="paused"]::before { opacity: 0.45; }
+.timer-screen[data-status='paused']::before {
+  opacity: 0.45;
+}
 
 @keyframes ambient-breathe {
-  0%, 100% { transform: scale(0.98); opacity: 0.7; }
-  50% { transform: scale(1.02); opacity: 1; }
+  0%,
+  100% {
+    transform: scale(0.98);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
 }
 
 .phase-icon {
-  transition: color 300ms ease, transform 300ms var(--ease-out);
+  transition:
+    color 300ms ease,
+    transform 300ms var(--ease-out);
 }
 
-.timer-screen[data-status="running"] .phase-icon {
+.timer-screen[data-status='running'] .phase-icon {
   color: var(--accent-hot);
   animation: phase-icon-float 3.2s ease-in-out infinite;
 }
 
-.timer-screen[data-status="paused"] .phase-icon { color: var(--text-muted); }
+.timer-screen[data-status='paused'] .phase-icon {
+  color: var(--text-muted);
+}
 
 @keyframes phase-icon-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
 }
 
 .control-primary {
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.08), 0 6px 18px rgba(0, 0, 0, 0.22);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.08),
+    0 6px 18px rgba(0, 0, 0, 0.22);
 }
 
 .control-primary:hover:not(:disabled) {
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12), 0 8px 22px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.12),
+    0 8px 22px rgba(0, 0, 0, 0.3);
 }
 
 /* Feedback exclusivo de PAUSAR: aparece únicamente al pasar el cursor. */
-.control-primary[data-action="pause"] {
+.control-primary[data-action='pause'] {
   position: relative;
   overflow: hidden;
 }
 
-.control-primary[data-action="pause"]::after {
-  content: "";
+.control-primary[data-action='pause']::after {
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(105deg, transparent 25%, rgba(255, 179, 71, 0.16) 50%, transparent 75%);
+  background: linear-gradient(
+    105deg,
+    transparent 25%,
+    rgba(255, 179, 71, 0.16) 50%,
+    transparent 75%
+  );
   transform: translateX(-115%);
   opacity: 0;
   pointer-events: none;
 }
 
-.control-primary[data-action="pause"]:hover::after {
+.control-primary[data-action='pause']:hover::after {
   opacity: 1;
   transform: translateX(115%);
-  transition: transform 520ms var(--ease-out), opacity 180ms ease;
+  transition:
+    transform 520ms var(--ease-out),
+    opacity 180ms ease;
 }
 
-.control-primary[data-action="pause"]:hover {
+.control-primary[data-action='pause']:hover {
   transform: translateY(-1px);
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.14), 0 8px 22px rgba(255, 75, 43, 0.18);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.14),
+    0 8px 22px rgba(255, 75, 43, 0.18);
 }
 
 /* Transiciones direccionales para navegar como una ventana física. */
 @keyframes screen-enter-right {
-  from { opacity: 0; transform: translateX(12px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes screen-enter-up {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .screen-enter-right {
@@ -197,6 +269,17 @@
 
 .screen-enter-up {
   animation: screen-enter-up 300ms var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
 }
 
 /* La pantalla de ajustes mantiene el cuerpo estable mientras cambia la pestaña. */
@@ -216,8 +299,12 @@
   pointer-events: none;
 }
 
-.settings-tab-indicator[data-tab="notifications"] { transform: translateX(100%); }
-.settings-tab-indicator[data-tab="system"] { transform: translateX(200%); }
+.settings-tab-indicator[data-tab='notifications'] {
+  transform: translateX(100%);
+}
+.settings-tab-indicator[data-tab='system'] {
+  transform: translateX(200%);
+}
 
 .interactive-control {
   transition:
@@ -241,12 +328,22 @@
   animation: metric-enter 420ms var(--ease-out) both;
 }
 
-.metric-card:nth-child(2) { animation-delay: 50ms; }
-.metric-card:nth-child(3) { animation-delay: 100ms; }
+.metric-card:nth-child(2) {
+  animation-delay: 50ms;
+}
+.metric-card:nth-child(3) {
+  animation-delay: 100ms;
+}
 
 @keyframes metric-enter {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .weekly-bar {
@@ -255,16 +352,34 @@
 }
 
 @keyframes bar-enter {
-  from { opacity: 0; transform: scaleY(0); }
-  to   { opacity: 1; transform: scaleY(1); }
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
 }
 
 /* Pulso de ignición del puntero al iniciar/reanudar */
 @keyframes pointer-ignite {
-  0%   { transform: scale(1);   opacity: 0.6; }
-  30%  { transform: scale(1.7); opacity: 1;   }
-  60%  { transform: scale(1.3); opacity: 0.95; }
-  100% { transform: scale(1);   opacity: 1;   }
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  30% {
+    transform: scale(1.7);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.3);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .pointer--ignite {
@@ -273,15 +388,28 @@
 
 /* Respetar preferencia de movimiento reducido */
 @media (prefers-reduced-motion: reduce) {
-  .arc--running, .time--paused, .arc--complete, .screen-enter,
-  .screen-enter-right, .screen-enter-up, .settings-tab-content,
-  .metric-card, .weekly-bar, .pointer--ignite {
+  .arc--running,
+  .time--paused,
+  .arc--complete,
+  .screen-enter,
+  .screen-enter-right,
+  .screen-enter-up,
+  .settings-tab-content,
+  .metric-card,
+  .weekly-bar,
+  .pointer--ignite {
     animation: none;
     transition: none;
   }
 
-  .settings-tab-indicator { transition: none; }
+  .settings-tab-indicator {
+    transition: none;
+  }
 
-  .timer-screen[data-status="running"]::before { animation: none; }
-  .timer-screen[data-status="running"] .phase-icon { animation: none; }
+  .timer-screen[data-status='running']::before {
+    animation: none;
+  }
+  .timer-screen[data-status='running'] .phase-icon {
+    animation: none;
+  }
 }

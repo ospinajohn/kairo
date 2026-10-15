@@ -36,7 +36,6 @@ export function Switch({ checked, onChange, id, ariaLabel, disabled = false }: S
         cursor: disabled ? 'not-allowed' : 'pointer',
         padding: 2,
         flexShrink: 0,
-        outline: 'none',
         opacity: disabled ? 0.4 : 1,
         transition: 'background 200ms ease, box-shadow 200ms ease',
         boxShadow: checked && !disabled ? '0 0 10px rgba(255, 75, 43, 0.35)' : 'none',

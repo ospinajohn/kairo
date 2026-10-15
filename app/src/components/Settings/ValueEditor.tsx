@@ -79,13 +79,16 @@ export function ValueEditor({
     cursor: enabled ? 'pointer' : 'default',
     opacity: enabled ? 1 : 0.35,
     userSelect: 'none',
-    outline: 'none',
     transition: 'background 100ms ease, transform 90ms ease, opacity 150ms ease',
   });
 
   return (
     <div
       className='screen-enter-right'
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowUp'   && canIncrease) { e.preventDefault(); handleIncrease(); }
+        if (e.key === 'ArrowDown' && canDecrease) { e.preventDefault(); handleDecrease(); }
+      }}
       style={{
         position: 'relative',
         width: '100%',
@@ -113,7 +116,6 @@ export function ValueEditor({
           alignItems: 'center',
           justifyContent: 'center',
           cursor: 'pointer',
-          outline: 'none',
           transition: 'background 120ms ease, transform 90ms ease',
         }}
         onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
@@ -244,3 +246,4 @@ export function ValueEditor({
     </div>
   );
 }
+

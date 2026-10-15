@@ -72,8 +72,8 @@ export function MainControls({
   const handlePrimary = status === 'running' ? onPause : status === 'paused' ? onResume : onStart;
 
   const circleBtn: React.CSSProperties = {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
     borderRadius: 9999,
     background: 'transparent',
     color: 'var(--text-muted)',

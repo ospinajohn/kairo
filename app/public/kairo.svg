@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kairo">
+  <defs>
+    <radialGradient id="light" cx="25%" cy="25%" r="75%">
+      <stop offset="0%" stop-color="#FF8A4D" />
+      <stop offset="35%" stop-color="#FF4B2B" stop-opacity="0.55" />
+      <stop offset="75%" stop-color="#E5301A" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="arc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E5301A" />
+      <stop offset="55%" stop-color="#FF6A35" />
+      <stop offset="100%" stop-color="#FFB347" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="#000000" />
+  <rect width="64" height="64" rx="18" fill="url(#light)" />
+  <circle cx="32" cy="32" r="19" fill="none" stroke="#363638" stroke-width="4" />
+  <path d="M32 13a19 19 0 0 1 16.4 9.5" fill="none" stroke="url(#arc)" stroke-width="6" stroke-linecap="round" />
+  <circle cx="48.4" cy="22.5" r="3.2" fill="#FFB347" />
+</svg>

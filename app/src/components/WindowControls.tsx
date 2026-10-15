@@ -18,8 +18,8 @@ export function WindowControls() {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 18,
-    height: 18,
+    width: 28,
+    height: 28,
     borderRadius: '50%',
     border: 'none',
     background: 'transparent',
@@ -48,11 +48,11 @@ export function WindowControls() {
           aria-label='Minimizar'
         >
           {/* Icono — */}
-          <svg width='8' height='2' viewBox='0 0 8 2' fill='none'>
+          <svg width='11' height='2' viewBox='0 0 11 2' fill='none'>
             <line
               x1='1'
               y1='1'
-              x2='7'
+              x2='10'
               y2='1'
               stroke={hovered === 'min' ? '#FFFFFF' : 'rgba(255,255,255,0.7)'}
               strokeWidth='1.5'
@@ -78,21 +78,21 @@ export function WindowControls() {
           aria-label='Cerrar'
         >
           {/* Icono × */}
-          <svg width='8' height='8' viewBox='0 0 8 8' fill='none'>
+          <svg width='11' height='11' viewBox='0 0 11 11' fill='none'>
             <line
-              x1='1.5'
-              y1='1.5'
-              x2='6.5'
-              y2='6.5'
+              x1='2.5'
+              y1='2.5'
+              x2='8.5'
+              y2='8.5'
               stroke={hovered === 'close' ? '#FFFFFF' : 'rgba(255,255,255,0.7)'}
               strokeWidth='1.5'
               strokeLinecap='round'
             />
             <line
-              x1='6.5'
-              y1='1.5'
-              x2='1.5'
-              y2='6.5'
+              x1='8.5'
+              y1='2.5'
+              x2='2.5'
+              y2='8.5'
               stroke={hovered === 'close' ? '#FFFFFF' : 'rgba(255,255,255,0.7)'}
               strokeWidth='1.5'
               strokeLinecap='round'

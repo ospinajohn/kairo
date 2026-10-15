@@ -8,8 +8,8 @@
   position: absolute;
   top: 24px;
   right: 20px;
-  width: 56px;
-  height: 40px;
+  width: 84px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -60,7 +60,6 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  outline: none;
 }
 
 .screen-back-button:hover {
@@ -85,7 +84,7 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.55;
+    opacity: 0.72;
   }
 }
 
@@ -127,7 +126,7 @@
 }
 
 .time--paused {
-  animation: blink-pause 2s ease-in-out infinite;
+  animation: blink-pause 3s ease-in-out infinite;
 }
 
 .screen-enter {
@@ -270,6 +269,17 @@
 
 .screen-enter-up {
   animation: screen-enter-up 300ms var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
 }
 
 /* La pantalla de ajustes mantiene el cuerpo estable mientras cambia la pestaña. */

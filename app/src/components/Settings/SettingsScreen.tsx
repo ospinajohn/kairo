@@ -33,6 +33,7 @@ interface SettingsScreenProps {
 }
 
 type Tab = 'duration' | 'notifications' | 'system';
+const SETTINGS_ROW_HEIGHT = 40;
 
 function Row({ label, right }: { label: string; right: React.ReactNode }) {
   return (
@@ -41,7 +42,7 @@ function Row({ label, right }: { label: string; right: React.ReactNode }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: 42,
+        height: SETTINGS_ROW_HEIGHT,
         padding: '0 12px',
       }}
     >
@@ -100,6 +101,21 @@ export function SettingsScreen({
     { id: 'system', label: 'SISTEMA' },
   ];
 
+  // Navegación de pestañas con teclado (patrón ARIA tabs)
+  const handleTabKeyDown = (e: React.KeyboardEvent, index: number) => {
+    const last = tabs.length - 1;
+    let next = index;
+    if (e.key === 'ArrowRight') next = index === last ? 0 : index + 1;
+    else if (e.key === 'ArrowLeft') next = index === 0 ? last : index - 1;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = last;
+    else return;
+    e.preventDefault();
+    const target = tabs[next].id;
+    setActiveTab(target);
+    document.getElementById(`settings-tab-${target}`)?.focus();
+  };
+
   return (
     <div
       className='screen-enter'
@@ -148,6 +164,8 @@ export function SettingsScreen({
 
       {/* Pestañas pill */}
       <div
+        role='tablist'
+        aria-label='Secciones de ajustes'
         style={{
           position: 'absolute',
           top: 76,
@@ -164,12 +182,17 @@ export function SettingsScreen({
         }}
       >
         <span className='settings-tab-indicator' data-tab={activeTab} aria-hidden='true' />
-        {tabs.map((tab) => (
+        {tabs.map((tab, index) => (
           <button
             key={tab.id}
+            id={`settings-tab-${tab.id}`}
             type='button'
-            onClick={() => setActiveTab(tab.id)}
+            role='tab'
             aria-selected={activeTab === tab.id}
+            aria-controls={`settings-panel-${tab.id}`}
+            tabIndex={activeTab === tab.id ? 0 : -1}
+            onClick={() => setActiveTab(tab.id)}
+            onKeyDown={(e) => handleTabKeyDown(e, index)}
             style={{
               flex: 1,
               borderRadius: 9999,
@@ -182,7 +205,6 @@ export function SettingsScreen({
               fontWeight: 500,
               letterSpacing: '0.12em',
               cursor: 'pointer',
-              outline: 'none',
               transition: 'color 180ms ease',
               fontFamily: 'var(--font)',
             }}
@@ -194,6 +216,9 @@ export function SettingsScreen({
 
       {/* Contenido */}
       <div
+        id={`settings-panel-${activeTab}`}
+        role='tabpanel'
+        aria-labelledby={`settings-tab-${activeTab}`}
         style={{
           position: 'absolute',
           top: 124,
@@ -207,19 +232,25 @@ export function SettingsScreen({
         {/* DURACIÓN */}
         {activeTab === 'duration' &&
           durationRows.map((row) => (
-            <div
+            <button
               key={row.key}
+              type='button'
               className='settings-tab-content'
               onClick={() => onEditField(row.key)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                height: 40,
+                width: '100%',
+                height: SETTINGS_ROW_HEIGHT,
                 padding: '0 12px',
                 borderRadius: 12,
+                border: 'none',
+                background: 'transparent',
+                textAlign: 'left',
                 cursor: 'pointer',
                 transition: 'background 100ms ease',
+                fontFamily: 'var(--font)',
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.04)')
@@ -251,7 +282,7 @@ export function SettingsScreen({
                   <path d='M9 18l6-6-6-6' />
                 </svg>
               </div>
-            </div>
+            </button>
           ))}
 
         {/* ALERTAS */}

@@ -88,6 +88,20 @@ body,
   color: var(--text-muted);
 }
 
+/* Contenido solo para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 button:focus-visible,
 [role='button']:focus-visible {
   outline: 2px solid var(--focus-ring);
@@ -96,4 +110,26 @@ button:focus-visible,
 
 button:disabled {
   cursor: not-allowed;
+}
+/* Focus ring para botones numéricos (ValueEditor) — accesibilidad teclado */
+button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: inherit;
+}
+
+/* Pausar animaciones decorativas cuando la ventana no está visible */
+@media (prefers-reduced-motion: no-preference) {
+  .animation-paused .arc--running,
+  .animation-paused .timer-screen::before,
+  .animation-paused .phase-icon {
+    animation-play-state: paused;
+  }
+}
+
+/* Cursor pointer explícito en todos los elementos interactivos */
+[role="button"],
+button:not(:disabled),
+[tabindex="0"] {
+  cursor: pointer;
 }

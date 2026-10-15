@@ -10,6 +10,8 @@ import { useNotification } from './hooks/useNotification';
 import { useWindowControls } from './hooks/useWindowControls';
 import { useCompactMode } from './hooks/useCompactMode';
 import { useSound } from './hooks/useSound';
+import { usePreferences } from './hooks/usePreferences';
+import { TimeAnnouncer } from './components/TimeAnnouncer';
 import { TimerRing } from './components/TimerRing';
 import { PhaseIcon, PhaseLabel } from './components/PhaseLabel';
 import { SessionDots } from './components/SessionDots';
@@ -22,6 +24,8 @@ import { CONFIG_RANGES } from './logic/config';
 import { useStats } from './hooks/useStats';
 import { StatsScreen } from './components/Stats/StatsScreen';
 import type { TimerState } from './logic/timer';
+import { useVisibilityPause } from './hooks/useVisibilityPause';
+import { useRef } from 'react';
 
 type Screen = 'timer' | 'settings' | 'editor' | 'stats';
 
@@ -31,10 +35,9 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('timer');
   const [editingKey, setEditingKey] = useState<SettingsKey>('focusDuration');
 
-  // Preferencias de alertas
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [autoStartNext, setAutoStartNext] = useState(false);
+  // Preferencias de alertas (persistidas)
+  const { preferences, setPreference } = usePreferences();
+  const { notificationsEnabled, soundEnabled, autoStartNext } = preferences;
 
   // Hooks de sistema
   const { notify } = useNotification(notificationsEnabled, config.longBreakAfter);
@@ -47,6 +50,8 @@ export default function App() {
     toggleAutostart,
     toggleMinimizeToTray,
   } = useWindowControls();
+  const rootRef = useRef<HTMLDivElement>(null);
+  useVisibilityPause(rootRef);
   const { compact, toggleCompact } = useCompactMode();
   const { weekStats, statsError, recordSession, exportJSON, exportCSV, importJSON } = useStats();
 
@@ -86,6 +91,7 @@ export default function App() {
 
   return (
     <div
+      ref={rootRef}
       data-tauri-drag-region
       style={{
         position: 'relative',
@@ -103,6 +109,7 @@ export default function App() {
       }}
     >
       <WindowControls />
+      <TimeAnnouncer phase={currentPhase} minutes={minutes} status={state.status} />
 
       {/* ═══ MODO COMPACTO: solo anillo + tiempo ═══ */}
       {compact && (
@@ -156,16 +163,16 @@ export default function App() {
             aria-label='Salir del modo compacto'
             style={{
               position: 'absolute',
-              bottom: 8,
-              right: 8,
-              width: 24,
-              height: 24,
+              bottom: 10,
+              right: 10,
+              width: 36,
+              height: 36,
               borderRadius: 9999,
               background: 'var(--surface-2)',
               border: '1px solid var(--border)',
               color: 'var(--text-muted)',
               cursor: 'pointer',
-              fontSize: 10,
+              fontSize: 11,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -330,9 +337,9 @@ export default function App() {
               notificationsEnabled={notificationsEnabled}
               soundEnabled={soundEnabled}
               autoStartNext={autoStartNext}
-              onToggleNotifications={setNotificationsEnabled}
-              onToggleSound={setSoundEnabled}
-              onToggleAutoStart={setAutoStartNext}
+              onToggleNotifications={(v) => setPreference('notificationsEnabled', v)}
+              onToggleSound={(v) => setPreference('soundEnabled', v)}
+              onToggleAutoStart={(v) => setPreference('autoStartNext', v)}
               alwaysOnTop={alwaysOnTop}
               autostart={autostart}
               minimizeToTray={minimizeToTray}
